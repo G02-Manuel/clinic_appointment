@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data noupdate="1">
+
+		
+		<record id="menu_clinic_1" model="website.menu">
+			<field name="name">Book Appointment</field>
+			<field name="url">/page/show_doctors</field>
+			<field name="sequence" type="int">10</field>
+			<field name="code">clinic_book</field>
+		</record>
+		
+
+		<function model="website.menu" name="post_install_adjustment"/>
+
+
+
+		<record id="spec1" model="spec.spec">
+			<field name="name">Surgery</field>
+			<field name="code">SUG</field>
+		</record>
+		<record id="spec2" model="spec.spec">
+			<field name="name">Pediatrics</field>
+			<field name="code">PED</field>
+		</record>
+		<record id="spec3" model="spec.spec">
+			<field name="name">Internal Medicine</field>
+			<field name="code">INT</field>
+		</record>
+		<record id="spec4" model="spec.spec">
+			<field name="name">Radiology</field>
+			<field name="code">RAD</field>
+		</record>
+		<record id="spec5" model="spec.spec">
+			<field name="name">Gynaecology</field>
+			<field name="code">GYN</field>
+		</record>
+		<record id="spec6" model="spec.spec">
+			<field name="name">Neurology</field>
+			<field name="code">NEU</field>
+		</record>
+		<record id="spec7" model="spec.spec">
+			<field name="name">Genaral</field>
+			<field name="code">GEN</field>
+		</record>
+		<record id="spec8" model="spec.spec">
+			<field name="name">Dermatology</field>
+			<field name="code">DER</field>
+		</record>
+		<record id="spec9" model="spec.spec">
+			<field name="name">Geriatrics</field>
+			<field name="code">GER</field>
+		</record>
+		<record id="spec10" model="spec.spec">
+			<field name="name">Obstetrics</field>
+			<field name="code">OBS</field>
+		</record>
+		<record id="spec11" model="spec.spec">
+			<field name="name">Cardiology</field>
+			<field name="code">CAR</field>
+		</record>
+		<record id="spec12" model="spec.spec">
+			<field name="name">Urology</field>
+			<field name="code">URO</field>
+		</record>
+		<record id="spec13" model="spec.spec">
+			<field name="name">Anesthesiology</field>
+			<field name="code">ANE</field>
+		</record>
+		<record id="spec14" model="spec.spec">
+			<field name="name">Pathalogy</field>
+			<field name="code">PAT</field>
+		</record>
+		<record id="spec15" model="spec.spec">
+			<field name="name">Orthopaedics</field>
+			<field name="code">ORT</field>
+		</record>
+		<record id="spec16" model="spec.spec">
+			<field name="name">Neurosurgery</field>
+			<field name="code">NES</field>
+		</record>
+		<record id="spec17" model="spec.spec">
+			<field name="name">Dentist</field>
+			<field name="code">DEN</field>
+		</record>
+
+
+
+	</data>
+</odoo>

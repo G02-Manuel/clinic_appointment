@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+
+		<template id="selector_page" name="calendar">
+			<title>Select Your Dr.</title>
+			<div class="">
+				<!-- <div> -->
+				<!-- <h3 class="new-header"> &#160;Schedule Your Appointment now</h3> -->
+				<!-- </div> -->
+				<form action="/page/show_doctors" id="search_form">
+
+					<input type="hidden" name="date_selected1" id="date_selected"></input>
+					<input type="hidden" name="spec_selected1" id="spec_selected"></input>
+					<input type="hidden" name="doc_selected1" id="doc_selected"></input>
+
+                    
+                    
+                    
+
+
+
+
+
+                    <div class="container">
+                      <div class="row" style="width:100%;" >
+                        <div class="col-md-4" style="padding: 10px;" >
+                            <div class="icon_icon static-div">
+                                <i class="fa fa-calendar" style="margin-top: -4px;  margin-left: 8px;"></i>
+                                <input type="date" id="datepicker1" name="edate" class="calendr_txt"
+                                    t-att-value="selected_date" required='1' />
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="padding: 10px;" >
+                            <select id="id_select_spec" class="fa" name="spec">
+                                <option value="0">
+                                    &#160;&#160; &#xf0f8; &#160;&#160;&#160;--
+                                    Speciality --
+                                </option>
+                                <t t-foreach="speciality_ids" t-as="spec">
+                                    <option t-att-value="spec.id" t-att-selected="spec.id == int(selected_spec)">
+                                        &#160;&#160; &#xf0f8; &#160;&#160;&#160;
+                                        <t t-esc="spec.name" />
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="col-md-4" style="padding: 10px;" >
+                        <div style='display: inline-flex; width: 100%;' >
+                            <select id="id_select_dr" class="fa" name="doc">
+                                <option value="0">
+                                    &#160;&#160; &#xf007; &#160;&#160;&#160;--
+                                    Dr. Name --
+                                </option>
+                                <t t-foreach="doctor_ids" t-as="dr">
+                                    <option t-att-value="dr.id" t-att-selected="dr.id == int(selected_doc)">
+                                        &#160;&#160; &#xf007; &#160;&#160;&#160;
+                                        <t t-esc="dr.name" />
+                                    </option>
+                                </t>
+                            </select>
+                            
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                    <div class="row" style="width:100%;" >
+                    <div class="col-md-12" style="padding: 10px; text-align: center;" >
+                    <span class="icon_icon_search search-div find column">
+                                <i class="fa fa-search"></i><span>Search</span>
+                            </span>
+                    </div>
+                    </div>
+                    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+				</form>
+			</div>
+		</template>
+
+
+
+		<template id="show_doctors_list" name="Doctors">
+			<title>Select Your Doctor</title>
+			<t t-call="website.layout">
+				<div id="wrap">
+					<div class="oe_structure" />
+					<!-- <div class="main_bg_style"> -->
+					<div class='header-div container'>
+						<div style="margin-left: 10%;">
+							<t t-call="clinic_appointment.selector_page"></t>
+						</div>
+						<div class="" style="margin-top: 130px; ">
+							<form action="/page/book_appointment" id="doctor_form">
+								<div class="doctor-div" style="margin-bottom:500px; ">
+
+									<input type="hidden" name="date_selected1" id="date_selected"
+										t-att-value="selected_date"></input>
+									<input type="hidden" name="spec_selected1" id="spec_selected"></input>
+									<input type="hidden" name="doc_selected1" id="doc_selected"></input>
+									<input type="hidden" name="times_selected1" id="times_selected1"
+										t-att-value="times"></input>
+
+									<t t-if="not physician_ids">
+										<div class="no-data">Search Using date and other Criteria
+											for Appointments!</div>
+									</t>
+
+									<t t-foreach="physician_ids" t-as="physician">
+
+										<div class="doctor-div-sub col-md-10 col-sm-10 col-md-push-1">
+											<div
+												style="display:flex; background-color: rgba(0,0,0,.03);margin-left: -16px; margin-bottom: 15px; margin-right: -16px; border-top: 1px solid rgba(0, 0, 0, 0.15);">
+												<div
+													style="padding-top: 10px; padding-left: 10px; width: 90px; border-radius: 5px; ">
+													<img width="90" height="90" alt="set company logo"
+														style="border-radius: 5px; " t-attf-src="data:image/gif;base64, #{physician.image}" />
+												</div>
+
+
+
+												<div class="col-md-3" style="margin-left:20px; margin-top:30px;">
+													<div style="margin-bottom: 5px; font-weight: bold;">
+														<t t-esc="physician.name" />
+														<!-- &#160;<t t-esc="physician.middle_name" />&#160;<t t-esc="physician.lastname" 
+															/> -->
+														<input style="display: none" t-att-value="physician.id"
+															name="physician_id"></input>
+													</div>
+													<div
+														style="background-color: #C3E0F1; border-radius: 5px; padding: 5px 10px 5px 10px; float:left; margin:auto;">
+														<t t-foreach="physician.specialty_ids" t-as="spec">
+															<small>
+																<t t-esc="spec.name" />
+															</small>
+														</t>
+													</div>
+												</div>
+
+												<div class="description_section col-md-6">
+													<br></br>
+													<p>
+														<span t-field="physician.phy_description" />
+													</p>
+												</div>
+
+											</div>
+
+
+											<div
+												style="float: right; margin-right: 20px; margin-top: 50px; color: white;"
+												t-att-data-id="physician.id" t-att-data-name="physician.id">
+												<span class="btn view-button" t-att-data-id="physician.id"
+													style="background-color: #14addb; border-color: #14addb; border-radius: 5px; margin-bottom: 10px;">
+													<span t-att-data-id="physician.id">
+														<i class="fs-small fa fa-eye"></i>
+													</span>
+													<span>View Availability</span>
+												</span>
+
+											</div>
+
+											<div
+												style="display: none; float: left; margin-top=100px; width:100%;"
+												t-att-id="physician.id" t-att-data-id="physician.id">
+
+												<t t-foreach="times" t-as="time">
+													<t t-if="time[0] == physician.id">
+														<div class="box-time" id='id_1' t-att-data-slot="time[2]">
+															<div class="box-time-sub">
+																<t t-esc="time[1]" />
+															</div>
+														</div>
+													</t>
+												</t>
+												<input style="display: none" id="box-time-selected"
+													name="selected-box-name"></input>
+												<input style="display: none" id="phy-selected" name="phy-selected"></input>
+												<input style="display: none" id="slot-selected" name="slot-selected"></input>
+											</div>
+
+											<div id='book-btn' class='book-btn' t-att-value="physician.id"
+												t-att-data-value="physician.id"
+												style="display: none; float: right; margin-right: 20px; margin-bottom: 20px; color: white;">
+												<span class="btn book-button"
+													style="background-color: #14addb; border-color: #14addb; border-radius: 5px;">
+													<span>
+														<i class="fs-small fa fa-arrow-right"></i>
+													</span>
+													<span>Book Appointment</span>
+												</span>
+											</div>
+
+
+										</div>
+									</t>
+								</div>
+								<div style="padding-bottom:100px" >
+                                        <br></br>
+                                        <br></br>
+                                        <br></br>
+                                    </div>
+							</form>
+						</div>
+						
+					</div>
+				</div>
+				<div class="oe_structure" />
+				<!-- </div> -->
+			</t>
+		</template>
+
+
+
+
+
+
+
+
+		<template id="appointment_user_confirm" name="Confirm appointment">
+			<title>Confirm Appointment</title>
+			<t t-call="website.layout">
+				<div id="wrap">
+					<div class="oe_structure" />
+					<div class="main_bg_style">
+						<form action="/page/confirm_appointment" id="confirm_form">
+							<div class="container">
+								<div class="confirm-div-main ">
+
+									<input type="hidden" name="times_selected2" id="times_selected2"
+										t-att-value="times_selected1"></input>
+
+									<div class="confirm-div-user">
+                                      <div class="row" style="width: 170%; padding: 5%; padding-right: 35%;" >
+                                      
+                                      <div class="col-md-4" style="padding: 10px;" >
+
+                                    <input type="hidden" name="date" t-att-value="date_selected1"></input>
+                                    <div class="confirm-div-doc">
+                                        <div>
+                                            <h3 style="color: #14addb; ">Shceduling Appointment</h3>
+                                            <div style="color: #14addb; ">
+                                                <i class="fa fa-calendar"></i>
+                                                <span style="margin-left: 5px;">On</span>
+                                                <t t-esc="date_selected1" />
+                                            </div>
+                                            <div style="color: #14addb; ">
+                                                <i class="fa fa-clock-o"></i>
+                                                <span style="margin-left: 8px;">At</span>
+                                                <t t-esc="box_time_text" />
+                                            </div>
+                                            <div>
+                                                <h3 style="color: #14addb; ">With</h3>
+                                            </div>
+
+
+                                        </div>
+                                        <div style="display: flex" >
+                                            <div
+                                                style="padding-top: 10px; padding-left: 10px; width: 90px; border-radius: 5px; ">
+                                                <img width="90" height="90" alt="set company logo"
+                                                    style="border-radius: 5px; " t-attf-src="data:image/gif;base64, #{physician.image}" />
+                                            </div>
+                                            <div style="margin-left:20px; margin-top:30px; width:300px;  ">
+                                                <div
+                                                    style="margin-bottom: 5px; font-weight: bold; color: #14addb;">
+                                                    <t t-esc="physician.name" />
+                                                    <input style="display: none" t-att-value="physician.id"
+                                                        name="physician_id"></input>
+                                                </div>
+                                                <div
+                                                    style="background-color: #C3E0F1; border-radius: 5px;padding: 5px 10px 5px 10px; float: left;">
+                                                    <t t-foreach="physician.specialty_ids" t-as="spec">
+                                                        <small>
+                                                            <t t-esc="spec.name" />
+                                                        </small>
+                                                    </t>
+                                                    <input style="display: none" t-att-value="date_selected"
+                                                        name="date"></input>
+                                                    <input style="display: none" t-att-value="box_time_text"
+                                                        name="time"></input>
+                                                    <input style="display: none" t-att-value="specs"
+                                                        name="speciality_text"></input>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="description_section col-md-12">
+                                            <br></br>
+                                            <br></br>
+                                            <p>
+                                                <span t-field="physician.phy_description" />
+                                            </p>
+                                        </div>
+                                    </div>
+
+</div>
+
+                                        <div class="col-md-4" style="padding: 10px;" >
+                                        
+                                        
+                                        
+										<div style="padding-bottom:20px">
+										  
+											<ul style="padding-left: 0px;" >
+                                                
+                                                <li style="color: #14addb;" id="li_1">
+                                                    <h3 style="color: #14addb; ">Personal Details</h3>
+                                                </li>
+                                                
+												<li style="color: #14addb;" id="li_1">
+													<label for="element_1">Name </label>
+													<div>
+														<input id="element_1" name="name" class="field_in"
+															type="text" maxlength="255" value="" />
+													</div>
+												</li>
+												<li class="li_margin" id="li_2">
+													<label for="element_2">City </label>
+													<div>
+														<input id="element_2" name="addr" class="field_in"></input>
+													</div>
+												</li>
+												<li class="li_margin" id="li_3">
+													<label for="element_3">Email </label>
+													<div>
+														<input id="element_3" required='required' name="email"
+															class="field_in" type="text" maxlength="255" value="" />
+													</div>
+												</li>
+												<li class="li_margin" id="li_4">
+													<label for="element_4">Phone </label>
+													<div>
+														<input id="element_4" name="phone" class="field_in"
+															type="text" maxlength="255" value="" />
+													</div>
+												</li>
+
+												<li class="li_margin" id="li_6">
+													<label for="element_6">Gender </label>
+													<div>
+														<input type="radio" checked='checked' name="gender"
+															value="m">&#160;&#160;Male</input>
+														&#160;&#160;&#160;&#160;&#160;
+														<input type="radio" name="gender" value="f">&#160;&#160;Female
+														</input>
+													</div>
+												</li>
+
+
+												<li class="li_margin" id="li_5">
+													<label for="element_5">Description </label>
+													<div>
+														<textarea id="element_5" name="desc" class="field_in_text"></textarea>
+													</div>
+												</li>
+                                                
+                                                <li class="li_margin" id="li_6">
+                                                <div id='confirm-btn' style="color: white;">
+                                            <span class="btn book-button"
+                                                style="background-color: #14addb; border-color: #14addb; border-radius: 5px;">
+                                                <span>
+                                                    <i class="fs-small fa fa-check"></i>
+                                                </span>
+                                                <span>Confirm Appointment</span>
+                                            </span>
+                                        </div>
+                                        
+                                        </li>
+											</ul>
+										</div>
+										</div>
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+
+
+
+
+
+
+                                    
+
+                                        </div>
+                                        
+                                        
+                                        
+                                        
+                                        
+                                    </div>
+
+
+
+
+
+
+
+								</div>
+
+
+							</div>
+						</form>
+					</div>
+					<div class="oe_structure" />
+				</div>
+			</t>
+
+		</template>
+
+
+
+
+		<template id="confirm_done" name="Confirm appointment">
+			<title>Confirm Appointment</title>
+			<t t-call="website.layout">
+				<div id="wrap">
+					<div class="oe_structure" />
+					<div class="main_bg_style">
+						<div class="container">
+							<div class="confirm-div-thank">
+								<h4>
+									Your Appointment has been fixed.
+									Appointment No. is
+									<h2>
+										<t t-esc="app_no" />
+									</h2>
+								</h4>
+								<h4>Check email form details</h4>
+							</div>
+						</div>
+					</div>
+					<div class="oe_structure" />
+				</div>
+			</t>
+		</template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</data>
+</odoo>

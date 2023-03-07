@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_medical" model="res.groups">
+        <field name="name">Clinical Access</field>
+    </record>
+
+</odoo>

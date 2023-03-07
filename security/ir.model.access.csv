@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_doc_appointment_temp,doc_appointment_temp,model_doc_appointment_temp,clinic_appointment.group_medical,1,1,1,1
+
+access_spec_spec,spec_spec,model_spec_spec,clinic_appointment.group_medical,1,1,1,1
+
+access_doc_appointment,doc_appointment,model_doc_appointment,clinic_appointment.group_medical,1,1,1,1
+
+access_doc_schedule,doc_appointment,model_doc_schedule,clinic_appointment.group_medical,1,1,1,1
+
+access_note_note,note_note,model_note_note,clinic_appointment.group_medical,1,1,1,1

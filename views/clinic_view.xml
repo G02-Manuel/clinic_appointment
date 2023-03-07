@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+
+
+		<record id="seq_appointment" model="ir.sequence">
+			<field name="name">Appointment</field>
+			<field name="code">doc.appointment</field>
+			<field eval="0" name="padding" />
+			<field name="prefix">APT</field>
+			<field name="padding">6</field>
+		</record>
+
+
+		<record model="ir.ui.view" id="view_doc_appointment_tree">
+			<field name="name">doc.appointment.tree</field>
+			<field name="model">doc.appointment</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name"></field>
+					<field name="doctor"></field>
+					<field name="patient"></field>
+					<field name="appointment_sdate"></field>
+					<field name="app_time"></field>
+				</tree>
+			</field>
+		</record>
+
+
+		<record id="view_doc_appointment_search" model="ir.ui.view">
+			<field name="name">doc.appointment.search</field>
+			<field name="model">doc.appointment</field>
+			<field name="arch" type="xml">
+				<search string="Appointments">
+					<group expand="1" string="Group By">
+						<filter string="Physician" name="group_phy"
+							context="{'group_by':'doctor'}" />
+						<filter string="Date" context="{'group_by':'appointment_sdate:month'}"
+							name="month" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_doc_appointment">
+			<field name="name">doc.appointment.form</field>
+			<field name="model">doc.appointment</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form>
+					<header>
+						<button name="do_confirm" string="Confirm" type="object"
+							class="oe_highlight" states="draft"></button>
+						<button name="do_cancel" string="Cancel" type="object"
+							states="draft"></button>
+						<button name="do_done" string="Mark as Done" type="object"
+							class="oe_highlight" states="confirmed"></button>
+
+						<field name="state" widget="statusbar" states="draft,confirmed,done,cancel"></field>
+					</header>
+					<sheet>
+						<group>
+							<h1>
+								<field name="name" nolabel='1'></field>
+							</h1>
+						</group>
+						<group>
+							<field name="patient"
+								attrs="{'readonly': [('state', 'in', ['confirmed', 'done', 'cancel'])]}"></field>
+							<field name="appointment_sdate"
+								attrs="{'readonly': [('state', 'in', ['confirmed', 'done', 'cancel'])]}"></field>
+							<field name="app_time"
+								attrs="{'readonly': [('state', 'in', ['confirmed', 'done', 'cancel'])]}"></field>
+							<field name="doctor"
+								attrs="{'readonly': [('state', 'in', ['confirmed', 'done', 'cancel'])]}"></field>
+							<field name="time_span"
+								attrs="{'readonly': [('state', 'in', ['confirmed', 'done', 'cancel'])]}"></field>
+
+
+
+						</group>
+						<group string="Comments">
+
+							<field name="comments" nolabel='1'
+								attrs="{'readonly': [('state', 'in', ['confirmed', 'done', 'cancel'])]}"></field>
+						</group>
+
+						<notebook>
+							<page name="notes" string='Notes'>
+								<field name="note_ids">
+									<tree>
+										<field name="note_date" />
+										<field name="note_text" />
+									</tree>
+									<form>
+										<group>
+											<field name="note_date" />
+											<field name="note_text" />
+										</group>
+									</form>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+
+				</form>
+			</field>
+		</record>
+
+
+
+
+
+
+
+		<record id="view_phys_tree" model="ir.ui.view">
+			<field name="name">res.partner.form</field>
+			<field name="model">res.partner</field>
+			<field name="priority" eval="1" />
+			<field name="arch" type="xml">
+				<tree string="Partners">
+				<field name="name" ></field>
+				</tree>
+			</field>
+		</record>
+
+
+
+		<record id="view_phys_form" model="ir.ui.view">
+			<field name="name">res.partner.form</field>
+			<field name="model">res.partner</field>
+			<field name="priority" eval="1" />
+			<field name="arch" type="xml">
+				<form string="Partners">
+					<sheet>
+                        <field name="image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;image&quot;}"/>
+                        <div class="oe_title">
+                            <field name="is_company" invisible="1"/>
+                            <field name="commercial_partner_id" invisible="1"/>
+                            <field name="company_type" widget="radio" class="oe_edit_only" invisible="1" options="{'horizontal': true}"/>
+                            <h1>
+                                <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                            </h1>
+                            <div class="o_row">
+                                <field name="parent_id" placeholder="Company" invisible="1" />
+                                <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
+                                <button name="create_company" type="object" string="Create company" class="btn btn-sm oe_edit_only fa fa-external-link btn btn-link " attrs="{'invisible': ['|', '|', ('is_company','=', True), ('company_name', '=', ''), ('company_name', '=', False)]}"/>
+                            </div>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one"/>
+                                <label for="street" string="Address"/>
+                                <div class="o_address_format" >
+                                    <div class="oe_edit_only">
+                                        <button name="open_parent" type="object" string="(edit)" class="oe_link" attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}"/>
+                                    </div>
+                                    <field name="street" placeholder="Street..." class="o_address_street" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    <field name="city" placeholder="City" class="o_address_city" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    <field name="state_id" class="o_address_state" placeholder="State" options="{&quot;no_open&quot;: True}" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'zip': zip}"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                </div>
+                                
+                            
+                            <br></br>
+                            <field name="is_doctor" invisible="1"/>
+              <field name="is_patient" invisible="1"/>
+              
+            
+              <field name="specialty_ids" attrs="{'invisible': [('is_doctor', '=', False)], 'required': [('is_doctor', '=', True)]}"/>
+              <field name="code" attrs="{'invisible': [('is_doctor', '=', False)], 'required': [('is_doctor', '=', True)]}"/>
+              
+                                
+              </group>           
+                                
+                            <group>
+                                <field name="function" placeholder="e.g. Sales Director" attrs="{'invisible': [('is_company','=', True)]}"/>
+                                <field name="phone" widget="phone"/>
+                                <field name="mobile" widget="phone"/>
+                                <field name="user_ids" invisible="1"/>
+                                <field name="email" widget="email" context="{'gravatar_image': True}" attrs="{'required': [('user_ids','!=', [])]}"/>
+                                <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
+                                <field name="title" options="{&quot;no_open&quot;: True}" attrs="{'invisible': [('is_company', '=', True)]}"/>
+                                <field name="lang"/>
+                            </group>
+                            </group>
+                            
+                            
+                            <group colspan="12" col="1" string="About Physician">
+                                    <field name="phy_description" nolabel="1"/>
+                                </group>
+                        
+
+                        <notebook colspan="4">
+                            <page string="Appointment Slots">
+
+                                <group string="Schedule Appointments">
+                                    <field name="schedule_ids" nolabel="1">
+                                        <form>
+                                            <group>
+                                                <field name="date" required="1" />
+                                            </group>
+                                            <group>
+                                                <field name="time_from" required="1" />
+                                                <field name="time_to" required="1" />
+                                            </group>
+                                            <group>
+                                                <field name="slot" required="1" />
+                                            </group>
+                                        </form>
+                                        <tree>
+                                            <field name="date"/>
+                                            <field name="time_from"/>
+                                            <field name="time_to"/>
+                                            <field name="slot"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+				</form>
+			</field>
+		</record>
+
+
+		
+		
+		
+		<record id="view_pat_tree" model="ir.ui.view">
+			<field name="name">res.partner.form</field>
+			<field name="model">res.partner</field>
+			<field name="priority" eval="1" />
+			<field name="arch" type="xml">
+				<tree string="Partners">
+				<field name="name" ></field>
+				</tree>
+			</field>
+		</record>
+		
+		<record id="view_pat_form" model="ir.ui.view">
+			<field name="name">res.partner.form</field>
+			<field name="model">res.partner</field>
+			<field name="priority" eval="1" />
+			<field name="arch" type="xml">
+				<form string="Partners">
+					<sheet>
+						<field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image"}'/>
+						<div class="oe_title">
+							<field name="is_company" invisible="1" />
+							<field name="commercial_partner_id" invisible="1" />
+							<field name="company_type" widget="radio" class="oe_edit_only" invisible='1' 
+								options="{'horizontal': true}" />
+							<h1>
+								<field name="name" default_focus="1" placeholder="Name"
+									attrs="{'required' : [('type', '=', 'contact')]}" />
+							</h1>
+							<div class="o_row">
+								<field name="parent_id" placeholder="Company" invisible="1" />
+								<field name="company_name"
+									attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}" />
+								<button name="create_company" type="object" string="Create company"
+									class="btn btn-sm oe_edit_only fa fa-external-link btn btn-link "
+									attrs="{'invisible': ['|', '|', ('is_company','=', True), ('company_name', '=', ''), ('company_name', '=', False)]}" />
+							</div>
+						</div>
+
+						<group>
+							<group>
+								<field name="type" attrs="{'invisible': [('parent_id','=', False)]}"
+									groups="base.group_no_one" />
+								<label for="street" string="Address" />
+								<div class="o_address_format">
+									<div class="oe_edit_only">
+										<button name="open_parent" type="object" string="(edit)"
+											class="oe_link"
+											attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}" />
+									</div>
+									<field name="street" placeholder="Street..." class="o_address_street"
+										attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" />
+									<field name="street2" placeholder="Street 2..." class="o_address_street"
+										attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" />
+									<field name="city" placeholder="City" class="o_address_city"
+										attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" />
+									<field name="state_id" class="o_address_state"
+										placeholder="State" options='{"no_open": True}'
+										attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"
+										context="{'country_id': country_id, 'zip': zip}" />
+									<field name="zip" placeholder="ZIP" class="o_address_zip"
+										attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" />
+									<field name="country_id" placeholder="Country" class="o_address_country"
+										options='{"no_open": True, "no_create": True}'
+										attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" />
+								</div>
+							</group>
+							<group>
+								<field name="function" placeholder="e.g. Sales Director"
+									attrs="{'invisible': [('is_company','=', True)]}" />
+								<field name="phone" widget="phone" />
+								<field name="mobile" widget="phone" />
+								<field name="user_ids" invisible="1" />
+								<field name="email" widget="email" context="{'gravatar_image': True}"
+									attrs="{'required': [('user_ids','!=', [])]}" />
+								<field name="website" widget="url" placeholder="e.g. www.odoo.com" />
+								<field name="title" options='{"no_open": True}'
+									attrs="{'invisible': [('is_company', '=', True)]}" />
+								<field name="lang" />
+							</group>
+						</group>
+
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+
+
+
+		<menuitem name="Medical" id="medical_root" icon="STOCK_ZOOM_IN" />
+
+		<menuitem name="Medical" id="medical_medical" icon="STOCK_ZOOM_IN"
+			parent="medical_root" />
+
+		<record id="action_show_physicians" model="ir.actions.act_window">
+			<field name="name">Physicians</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">res.partner</field>
+			<field name="domain">[('is_doctor', '=', True)]</field>
+			<field name="view_mode">kanban,tree,form</field>
+			<field name="context">{'is_doctor': True, }</field>
+			<field name="view_ids"
+				eval="[(5, 0, 0),
+							(0, 0, {'view_mode': 'tree', 'view_id': ref('clinic_appointment.view_phys_tree')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('clinic_appointment.view_phys_form')})]" />
+		</record>
+
+
+		<record model="ir.actions.act_window" id="action_show_specialty">
+			<field name="name">Specialty</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">spec.spec</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_show_appointments">
+			<field name="name">Appointments</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">doc.appointment</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{'search_default_group_phy': 1}</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_show_patients">
+			<field name="name">Patients</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">res.partner</field>
+			<field name="domain">[('is_patient', '=', True)]</field>
+			<field name="context">{'is_patient': True, }</field>
+			<field name="view_mode">kanban,tree,form</field>
+			<field name="view_ids"
+				eval="[(5, 0, 0),
+							(0, 0, {'view_mode': 'tree', 'view_id': ref('clinic_appointment.view_pat_tree')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('clinic_appointment.view_pat_form')})]" />
+		</record>
+
+
+		<menuitem name="Physicians" id="id_menu_physicians" parent="medical_medical"
+			action="action_show_physicians" sequence="1" />
+
+		<menuitem name="Specialties" id="id_menu_specialty" parent="medical_medical"
+			action="action_show_specialty" sequence="4" />
+
+		<menuitem name="Appointments" id="id_menu_appointments"
+			parent="medical_medical" action="action_show_appointments" sequence="4" />
+
+
+		<menuitem name="Patients" id="id_menu_patients" parent="medical_medical"
+			action="action_show_patients" sequence="1" />
+
+
+
+
+		<record model="ir.ui.view" id="view_partner_form_in_clinic">
+			<field name="name">res.partner.form</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<xpath expr="//notebook/page[1]" position='before'>
+					<page string="Clinic">
+						<group colspan="4" col="4">
+							<field name="is_doctor" invisible='1' />
+							<field name="is_patient" invisible='1' />
+						</group>
+						<group colspan="4" col="4">
+							<field name="specialty_ids"
+								attrs="{'invisible': [('is_doctor', '=', False)], 'required': [('is_doctor', '=', True)]}" />
+							<field name="code"
+								attrs="{'invisible': [('is_doctor', '=', False)], 'required': [('is_doctor', '=', True)]}" />
+						</group>
+						<group colspan="12" col="1" string="About Physician">
+							<field name="phy_description" nolabel='1' />
+						</group>
+
+						<group string='Schedule Appointments'>
+							<field name="schedule_ids" nolabel='1'>
+								<form>
+									<group>
+										<field name="date" />
+									</group>
+									<group>
+										<field name="time_from" />
+										<field name="time_to" />
+									</group>
+									<group>
+										<field name="slot" />
+									</group>
+								</form>
+								<tree>
+									<field name="date" />
+									<field name="time_from" />
+									<field name="time_to" />
+									<field name="slot" />
+								</tree>
+							</field>
+						</group>
+					</page>
+				</xpath>
+
+			</field>
+		</record>
+		
+		
+		<record id="ca_email" model="mail.template">
+            <field name="name">Clinic Appointment</field>
+            <field name="model_id" ref="base.model_res_users" />
+            <field name="subject">subject</field>
+            <field name="email_from">${user.email|safe}</field>
+            <field name="email_to">${user.email | safe}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" >
+    
+                </table>
+            </field>
+            <field name="auto_delete" eval="True" />
+        </record>
+
+
+	</data>
+</odoo>
